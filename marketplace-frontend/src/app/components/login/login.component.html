@@ -1,0 +1,66 @@
+<div class="auth-page">
+  <div class="auth-card animate-fade-in">
+    <!-- Header -->
+    <div class="auth-header">
+      <div class="auth-logo">🏪</div>
+      <h1>Welcome Back</h1>
+      <p>Sign in to your InHouse Marketplace account</p>
+    </div>
+
+    <!-- Error alert -->
+    <div class="alert alert-danger" *ngIf="errorMsg">
+      ⚠️ {{ errorMsg }}
+    </div>
+
+    <!-- Form -->
+    <form (ngSubmit)="onSubmit()" id="login-form">
+      <div class="form-group">
+        <label class="form-label" for="login-userId">Employee ID / Email</label>
+        <input
+          id="login-userId"
+          type="text"
+          class="form-control"
+          placeholder="e.g. emp001@company.com"
+          [(ngModel)]="userId"
+          name="userId"
+          autocomplete="username"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="login-password">Password</label>
+        <input
+          id="login-password"
+          type="password"
+          class="form-control"
+          placeholder="Enter your password"
+          [(ngModel)]="password"
+          name="password"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+
+      <button
+        id="login-submit"
+        type="submit"
+        class="btn btn-primary w-full btn-lg"
+        [disabled]="loading"
+      >
+        <span *ngIf="loading">⏳ Signing in...</span>
+        <span *ngIf="!loading">🚀 Sign In</span>
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Don't have an account? <a routerLink="/register">Register here</a></p>
+    </div>
+  </div>
+
+  <!-- Background decoration -->
+  <div class="auth-bg-decoration">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+</div>

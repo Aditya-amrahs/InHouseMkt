@@ -1,0 +1,36 @@
+<nav class="navbar">
+  <div class="nav-container">
+    <!-- Logo -->
+    <a class="nav-brand" routerLink="/" (click)="closeMenu()">
+      <span class="brand-icon">🏪</span>
+      <span class="brand-name">InHouse<span class="brand-accent">Market</span></span>
+    </a>
+
+    <!-- Desktop Links -->
+    <ul class="nav-links" [class.open]="menuOpen">
+      <li><a routerLink="/marketplace" routerLinkActive="active" (click)="closeMenu()">🔍 Browse</a></li>
+      <li><a routerLink="/requirements" routerLinkActive="active" (click)="closeMenu()">📋 Requirements</a></li>
+      <li><a routerLink="/offers" routerLinkActive="active" (click)="closeMenu()">📦 Offers</a></li>
+      <li *ngIf="authState?.isLoggedIn">
+        <a routerLink="/dashboard" routerLinkActive="active" (click)="closeMenu()">👤 Dashboard</a>
+      </li>
+    </ul>
+
+    <!-- Auth section -->
+    <div class="nav-auth">
+      <ng-container *ngIf="authState?.isLoggedIn; else notLoggedIn">
+        <span class="nav-user">Hi, {{ authState.employee?.empName || authState.user?.userId }}</span>
+        <button class="btn btn-outline btn-sm" (click)="logout()">Logout</button>
+      </ng-container>
+      <ng-template #notLoggedIn>
+        <a routerLink="/login" class="btn btn-outline btn-sm" (click)="closeMenu()">Login</a>
+        <a routerLink="/register" class="btn btn-primary btn-sm" (click)="closeMenu()">Register</a>
+      </ng-template>
+    </div>
+
+    <!-- Hamburger -->
+    <button class="hamburger" (click)="toggleMenu()" [attr.aria-label]="menuOpen ? 'Close menu' : 'Open menu'">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>

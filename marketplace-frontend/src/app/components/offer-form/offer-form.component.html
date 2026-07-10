@@ -1,0 +1,72 @@
+<div class="page-content">
+  <div class="container">
+    <div class="form-page animate-fade-in">
+      <div class="form-header">
+        <a routerLink="/dashboard" class="back-link">← Back</a>
+        <h1>{{ isEdit ? '✏️ Edit Offer' : '📦 Post an Offer' }}</h1>
+        <p class="text-muted">{{ isEdit ? 'Update your offer details' : 'Share what you have to offer' }}</p>
+      </div>
+
+      <div *ngIf="loading" class="spinner"></div>
+
+      <div class="card form-card" *ngIf="!loading">
+        <div class="alert alert-danger" *ngIf="errorMsg">⚠️ {{ errorMsg }}</div>
+
+        <form (ngSubmit)="onSubmit()" id="offer-form">
+          <div class="form-group">
+            <label class="form-label" for="offer-title">Title *</label>
+            <input id="offer-title" type="text" class="form-control"
+                   placeholder="e.g. iPhone 14 Pro for sale"
+                   [(ngModel)]="title" name="title" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="offer-desc">Description</label>
+            <textarea id="offer-desc" class="form-control" rows="4"
+                      placeholder="Describe your offer in detail..."
+                      [(ngModel)]="description" name="description"></textarea>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="offer-category">Category *</label>
+              <select id="offer-category" class="form-control" [(ngModel)]="category" name="category" required>
+                <option value="">Select category</option>
+                <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="offer-type">Type</label>
+              <select id="offer-type" class="form-control" [(ngModel)]="type" name="type">
+                <option value="">Select type</option>
+                <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="offer-price">Price (₹)</label>
+              <input id="offer-price" type="number" class="form-control"
+                     placeholder="0 for free" [(ngModel)]="price" name="price" min="0" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="offer-available-upto">Available Until</label>
+              <input id="offer-available-upto" type="date" class="form-control"
+                     [(ngModel)]="availableUpto" name="availableUpto" />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a routerLink="/dashboard" class="btn btn-outline">Cancel</a>
+            <button id="offer-submit" type="submit" class="btn btn-accent" [disabled]="submitting">
+              <span *ngIf="submitting">⏳ Saving...</span>
+              <span *ngIf="!submitting && !isEdit">📦 Post Offer</span>
+              <span *ngIf="!submitting && isEdit">✅ Update Offer</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,84 @@
+<div class="page-content">
+  <div class="container">
+    <div *ngIf="loading" class="spinner"></div>
+
+    <ng-container *ngIf="!loading && offer">
+      <a routerLink="/marketplace" class="back-link">← Back to Marketplace</a>
+
+      <div class="detail-layout animate-fade-in">
+        <div class="detail-main card">
+          <div class="detail-tags">
+            <span class="badge badge-primary">{{ offer.category }}</span>
+            <span class="badge badge-warning">{{ offer.type }}</span>
+            <span class="badge badge-success" *ngIf="offer.available">🟢 Available</span>
+            <span class="badge badge-danger" *ngIf="!offer.available">🔴 Unavailable</span>
+          </div>
+          <h1 class="detail-title">{{ offer.title }}</h1>
+          <p class="detail-desc">{{ offer.description }}</p>
+
+          <div class="detail-meta">
+            <div class="meta-item" *ngIf="offer.price">
+              <span class="meta-label">Price</span>
+              <span class="meta-value price">₹{{ offer.price | number }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Offered by</span>
+              <span class="meta-value">{{ offer.emp?.empName }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Department</span>
+              <span class="meta-value">{{ offer.emp?.deptName || '—' }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Location</span>
+              <span class="meta-value">{{ offer.emp?.location || '—' }}</span>
+            </div>
+            <div class="meta-item" *ngIf="offer.date">
+              <span class="meta-label">Posted on</span>
+              <span class="meta-value">{{ offer.date | date }}</span>
+            </div>
+            <div class="meta-item" *ngIf="offer.availableUpto">
+              <span class="meta-label">Available until</span>
+              <span class="meta-value">{{ offer.availableUpto | date }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Proposal panel -->
+        <div class="proposal-panel card" *ngIf="isLoggedIn && offer.available">
+          <h2>🤝 Make a Proposal</h2>
+          <p class="text-muted text-sm">Interested in this offer? Submit a proposal.</p>
+
+          <div class="alert alert-success" *ngIf="successMsg">{{ successMsg }}</div>
+          <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+          <form (ngSubmit)="submitProposal()" id="offer-proposal-form">
+            <div class="form-group">
+              <label class="form-label" for="offer-prop-text">Your Proposal</label>
+              <textarea id="offer-prop-text" class="form-control" rows="4"
+                        placeholder="Tell the seller what you'd like..."
+                        [(ngModel)]="proposalText" name="proposalText" required></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="offer-prop-amount">Your Offer Amount (₹)</label>
+              <input id="offer-prop-amount" type="number" class="form-control"
+                     placeholder="0" [(ngModel)]="proposalAmount" name="proposalAmount" min="0" />
+            </div>
+            <button id="btn-submit-offer-proposal" type="submit" class="btn btn-accent w-full"
+                    [disabled]="submitting">
+              <span *ngIf="submitting">⏳ Submitting...</span>
+              <span *ngIf="!submitting">🚀 Submit Proposal</span>
+            </button>
+          </form>
+        </div>
+
+        <div class="proposal-panel card" *ngIf="!isLoggedIn">
+          <div class="empty-state">
+            <div class="icon">🔐</div>
+            <p>Please <a routerLink="/login">login</a> to submit a proposal.</p>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

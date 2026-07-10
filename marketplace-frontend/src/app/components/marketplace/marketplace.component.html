@@ -1,0 +1,124 @@
+<div class="page-content">
+  <div class="container">
+    <!-- Hero -->
+    <div class="page-hero animate-fade-in">
+      <h1>🏪 Marketplace</h1>
+      <p>Find what you need or offer what you have — within your company</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-panel card animate-fade-in">
+      <div class="filters-row">
+        <div class="search-wrapper">
+          <span class="search-icon">🔍</span>
+          <input
+            id="market-search"
+            type="text"
+            class="form-control"
+            placeholder="Search requirements and offers..."
+            [(ngModel)]="searchTerm"
+          />
+        </div>
+
+        <select id="filter-category" class="form-control filter-select" [(ngModel)]="filterCategory">
+          <option value="">All Categories</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+
+        <select id="filter-type" class="form-control filter-select" [(ngModel)]="filterType">
+          <option value="">All Types</option>
+          <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+        </select>
+
+        <button id="btn-apply-filter" class="btn btn-primary" (click)="applyFilters()">Filter</button>
+        <button id="btn-clear-filter" class="btn btn-outline" (click)="clearFilters()">Clear</button>
+      </div>
+
+      <!-- View toggle -->
+      <div class="view-toggle">
+        <button [class.active]="activeView === 'all'" (click)="activeView = 'all'" id="view-all">All</button>
+        <button [class.active]="activeView === 'requirements'" (click)="activeView = 'requirements'" id="view-req">
+          📋 Requirements ({{ filteredRequirements.length }})
+        </button>
+        <button [class.active]="activeView === 'offers'" (click)="activeView = 'offers'" id="view-offers">
+          📦 Offers ({{ filteredOffers.length }})
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="spinner"></div>
+
+    <ng-container *ngIf="!loading">
+      <!-- Requirements section -->
+      <div *ngIf="activeView === 'all' || activeView === 'requirements'">
+        <div class="section-header">
+          <h2 class="section-title">📋 Requirements</h2>
+          <a routerLink="/requirements/new" class="btn btn-primary btn-sm" *ngIf="isLoggedIn"
+             id="btn-post-req">+ Post Requirement</a>
+        </div>
+
+        <div class="empty-state" *ngIf="filteredRequirements.length === 0">
+          <div class="icon">📋</div>
+          <p>No requirements found matching your filters.</p>
+        </div>
+
+        <div class="grid-auto animate-fade-in" *ngIf="filteredRequirements.length > 0">
+          <div class="resource-card card" *ngFor="let req of filteredRequirements">
+            <div class="card-top-row">
+              <span class="badge badge-primary">{{ req.category }}</span>
+              <span class="badge badge-warning">{{ req.type }}</span>
+              <span class="badge badge-success" *ngIf="req.fulfilled">Fulfilled</span>
+            </div>
+            <h3 class="res-title">{{ req.title }}</h3>
+            <p class="res-desc text-muted">{{ req.description }}</p>
+            <div class="res-footer">
+              <div class="res-meta">
+                <span class="res-price" *ngIf="req.price">₹{{ req.price | number }}</span>
+                <span class="res-who">by {{ req.emp?.empName }}</span>
+              </div>
+              <a [routerLink]="['/requirements', req.resId]" class="btn btn-outline btn-sm"
+                 [id]="'btn-view-req-' + req.resId">View →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider" *ngIf="activeView === 'all'"></div>
+
+      <!-- Offers section -->
+      <div *ngIf="activeView === 'all' || activeView === 'offers'">
+        <div class="section-header">
+          <h2 class="section-title">📦 Offers</h2>
+          <a routerLink="/offers/new" class="btn btn-accent btn-sm" *ngIf="isLoggedIn"
+             id="btn-post-offer">+ Post Offer</a>
+        </div>
+
+        <div class="empty-state" *ngIf="filteredOffers.length === 0">
+          <div class="icon">📦</div>
+          <p>No offers found matching your filters.</p>
+        </div>
+
+        <div class="grid-auto animate-fade-in" *ngIf="filteredOffers.length > 0">
+          <div class="resource-card card offer-card" *ngFor="let offer of filteredOffers">
+            <div class="card-top-row">
+              <span class="badge badge-primary">{{ offer.category }}</span>
+              <span class="badge badge-warning">{{ offer.type }}</span>
+              <span class="badge badge-success" *ngIf="offer.available">Available</span>
+              <span class="badge badge-danger" *ngIf="!offer.available">Unavailable</span>
+            </div>
+            <h3 class="res-title">{{ offer.title }}</h3>
+            <p class="res-desc text-muted">{{ offer.description }}</p>
+            <div class="res-footer">
+              <div class="res-meta">
+                <span class="res-price" *ngIf="offer.price">₹{{ offer.price | number }}</span>
+                <span class="res-who">by {{ offer.emp?.empName }}</span>
+              </div>
+              <a [routerLink]="['/offers', offer.resId]" class="btn btn-outline btn-sm"
+                 [id]="'btn-view-offer-' + offer.resId">View →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
