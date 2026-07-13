@@ -1,0 +1,18 @@
+services:
+  backend:
+    build:
+      context: ./marketplace-backend
+    container_name: backend
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./marketplace-react
+    container_name: frontend
+    ports:
+      - "80:80" # Change to "80:80" if using Nginx
+    depends_on:
+      - backend
+    restart: unless-stopped
