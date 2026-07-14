@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { addEmployee } from '../../services/api';
-import { UserPlus, AlertCircle, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import { UserPlus, AlertCircle, Eye, EyeOff, CheckCircle, Users } from 'lucide-react';
 import styles from './Register.module.css';
 
 const Register = () => {
@@ -75,9 +75,9 @@ const Register = () => {
 
       <div className={`${styles.card} animate-fade-in`}>
         <div className={styles.header}>
-          <div className={styles.logo}>👋</div>
+          <div className={styles.logoWrap}><Users size={24} strokeWidth={1.75} /></div>
           <h1>{step === 1 ? 'Join the Marketplace' : 'Complete Profile'}</h1>
-          <p className="text-secondary">
+          <p>
             {step === 1 ? 'Create your account first' : 'Tell us a bit about yourself'}
           </p>
         </div>

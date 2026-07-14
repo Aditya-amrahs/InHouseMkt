@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getRequirement, addProposal } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
-import { ArrowLeft, CheckCircle, Send } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Send, Handshake, Lock, Inbox, AlertCircle } from 'lucide-react';
 import Spinner from '../shared/Spinner';
 import Badge from '../shared/Badge';
 import EmptyState from '../shared/EmptyState';
@@ -60,7 +60,7 @@ const RequirementDetail = () => {
   };
 
   if (loading) return <div className="page-content"><Spinner /></div>;
-  if (!req) return <div className="page-content"><EmptyState icon="😕" message="Requirement not found" /></div>;
+  if (!req) return <div className="page-content"><EmptyState icon={AlertCircle} message="Requirement not found" /></div>;
 
   const isOwner = state.employee?.empId === req.emp?.empId;
 
@@ -114,17 +114,20 @@ const RequirementDetail = () => {
 
           {/* Proposal Panel */}
           <div className="card">
-            <h2 className="mb-2 flex items-center gap-2">🤝 {isOwner ? 'Proposals Received' : 'Submit Proposal'}</h2>
+            <h2 className="mb-2 flex items-center gap-2">
+              <Handshake size={18} strokeWidth={1.75} />
+              {isOwner ? 'Proposals Received' : 'Submit Proposal'}
+            </h2>
             
             {!state.isLoggedIn ? (
               <div className="empty-state py-8">
-                <div className="icon mb-4">🔐</div>
-                <p>Please <Link to="/login" className="text-primary-light font-bold">login</Link> to submit a proposal.</p>
+                <Lock size={40} strokeWidth={1.5} style={{ margin: '0 auto 16px', opacity: 0.4, display: 'block' }} />
+                <p>Please <Link to="/login" className="text-primary-c font-semibold">login</Link> to submit a proposal.</p>
               </div>
             ) : isOwner ? (
               <div className="mt-6">
                 {req.proposals?.length === 0 ? (
-                  <EmptyState icon="📬" message="No proposals received yet." />
+                  <EmptyState icon={Inbox} message="No proposals received yet." />
                 ) : (
                   <div className="flex flex-col gap-4">
                     {req.proposals?.map(p => (

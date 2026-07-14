@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { getEmployeeByUserId } from '../../services/api';
-import { LogIn, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { LogIn, Eye, EyeOff, AlertCircle, Store } from 'lucide-react';
 import styles from './Login.module.css';
 
 const Login = () => {
@@ -50,9 +50,9 @@ const Login = () => {
 
       <div className={`${styles.card} animate-fade-in`}>
         <div className={styles.header}>
-          <div className={styles.logo}>🏪</div>
+          <div className={styles.logoWrap}><Store size={24} strokeWidth={1.75} /></div>
           <h1>Welcome Back</h1>
-          <p className="text-secondary">Sign in to your InHouseMarket account</p>
+          <p>Sign in to your InHouseMarket account</p>
         </div>
 
         {error && (

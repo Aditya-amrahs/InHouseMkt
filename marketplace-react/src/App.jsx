@@ -16,14 +16,26 @@ const App = () => (
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Navigate to="/marketplace" replace />} />
+        {/* Public routes */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/marketplace" element={<Marketplace />} />
-        <Route path="/requirements" element={<Marketplace defaultView="requirements" />} />
-        <Route path="/offers" element={<Marketplace defaultView="offers" />} />
 
-        <Route path="/requirements/:id" element={<RequirementDetail />} />
+        {/* Protected marketplace routes */}
+        <Route path="/marketplace" element={
+          <ProtectedRoute><Marketplace /></ProtectedRoute>
+        } />
+        <Route path="/requirements" element={
+          <ProtectedRoute><Marketplace defaultView="requirements" /></ProtectedRoute>
+        } />
+        <Route path="/offers" element={
+          <ProtectedRoute><Marketplace defaultView="offers" /></ProtectedRoute>
+        } />
+
+        {/* Protected detail & form routes */}
+        <Route path="/requirements/:id" element={
+          <ProtectedRoute><RequirementDetail /></ProtectedRoute>
+        } />
         <Route path="/requirements/new" element={
           <ProtectedRoute><RequirementForm /></ProtectedRoute>
         } />
@@ -31,7 +43,9 @@ const App = () => (
           <ProtectedRoute><RequirementForm /></ProtectedRoute>
         } />
 
-        <Route path="/offers/:id" element={<OfferDetail />} />
+        <Route path="/offers/:id" element={
+          <ProtectedRoute><OfferDetail /></ProtectedRoute>
+        } />
         <Route path="/offers/new" element={
           <ProtectedRoute><OfferForm /></ProtectedRoute>
         } />
@@ -39,11 +53,13 @@ const App = () => (
           <ProtectedRoute><OfferForm /></ProtectedRoute>
         } />
 
+        {/* Protected dashboard */}
         <Route path="/dashboard" element={
           <ProtectedRoute><Dashboard /></ProtectedRoute>
         } />
 
-        <Route path="*" element={<Navigate to="/marketplace" replace />} />
+        {/* Catch-all → login */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   </AuthProvider>

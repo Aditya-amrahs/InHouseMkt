@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { getEmployeeRequirements, getEmployeeOffers, getAllProposals, updateRequirementFulfilled, updateOfferAvailability, deleteRequirement, deleteOffer, deleteProposal } from '../../services/api';
-import { ClipboardList, PackageOpen, Handshake, Plus, Trash2, Edit2, CheckCircle, XCircle } from 'lucide-react';
+import { ClipboardList, PackageOpen, Handshake, Plus, Trash2, Edit2, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import Spinner from '../shared/Spinner';
 import Badge from '../shared/Badge';
 import EmptyState from '../shared/EmptyState';
@@ -86,7 +86,7 @@ const Dashboard = () => {
   };
 
   if (!empId) {
-    return <div className="page-content"><div className="container"><EmptyState icon="⚠️" message="Employee profile not found." /></div></div>;
+    return <div className="page-content"><div className="container"><EmptyState icon={AlertTriangle} message="Employee profile not found." /></div></div>;
   }
 
   return (

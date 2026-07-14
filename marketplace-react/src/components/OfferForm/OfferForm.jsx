@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getOffer, addOffer, updateOffer } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Save, Edit2, Package } from 'lucide-react';
 import Spinner from '../shared/Spinner';
 
 const CATEGORIES = ['Accommodation', 'Electronics', 'Vehicle', 'Services', 'Other'];
@@ -94,7 +94,10 @@ const OfferForm = () => {
           <Link to="/dashboard" className="back-link">
             <ArrowLeft size={16} /> Back
           </Link>
-          <h1 className="text-2xl mb-2">{isEdit ? '✏️ Edit Offer' : '🚀 Post an Offer'}</h1>
+          <h1 className="text-2xl mb-2 flex items-center gap-2">
+            {isEdit ? <Edit2 size={20} strokeWidth={2} /> : <Package size={20} strokeWidth={2} />}
+            {isEdit ? 'Edit Offer' : 'Post an Offer'}
+          </h1>
           <p className="text-secondary">
             {isEdit ? 'Update your offer details' : 'Tell others what you have to offer'}
           </p>

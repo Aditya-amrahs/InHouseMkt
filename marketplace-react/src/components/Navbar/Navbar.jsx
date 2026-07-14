@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { ShoppingBag, LayoutDashboard, LogOut, LogIn, UserPlus, Menu, X, ChevronRight } from 'lucide-react';
+import {
+  Store, Search, ClipboardList, Package, LayoutDashboard,
+  LogOut, LogIn, UserPlus, Menu, X
+} from 'lucide-react';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
@@ -18,7 +21,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/marketplace');
+    navigate('/login');
     setMenuOpen(false);
   };
 
@@ -29,7 +32,7 @@ const Navbar = () => {
       <div className={styles.container}>
         {/* Brand */}
         <Link to="/marketplace" className={styles.brand} onClick={closeMenu}>
-          <span className={styles.brandIcon}>🏪</span>
+          <Store size={18} className={styles.brandIconSvg} strokeWidth={2} />
           <span className={styles.brandName}>
             InHouse<span className={styles.brandAccent}>Market</span>
           </span>
@@ -39,23 +42,27 @@ const Navbar = () => {
         <ul className={`${styles.links} ${menuOpen ? styles.open : ''}`}>
           <li>
             <NavLink to="/marketplace" className={({ isActive }) => isActive ? styles.active : ''} onClick={closeMenu}>
-              🔍 Browse
+              <Search size={14} strokeWidth={2} />
+              Browse
             </NavLink>
           </li>
           <li>
             <NavLink to="/requirements" className={({ isActive }) => isActive ? styles.active : ''} onClick={closeMenu}>
-              📋 Requirements
+              <ClipboardList size={14} strokeWidth={2} />
+              Requirements
             </NavLink>
           </li>
           <li>
             <NavLink to="/offers" className={({ isActive }) => isActive ? styles.active : ''} onClick={closeMenu}>
-              📦 Offers
+              <Package size={14} strokeWidth={2} />
+              Offers
             </NavLink>
           </li>
           {state.isLoggedIn && (
             <li>
               <NavLink to="/dashboard" className={({ isActive }) => isActive ? styles.active : ''} onClick={closeMenu}>
-                <LayoutDashboard size={15} style={{ verticalAlign: 'middle' }} /> Dashboard
+                <LayoutDashboard size={14} strokeWidth={2} />
+                Dashboard
               </NavLink>
             </li>
           )}
@@ -65,9 +72,14 @@ const Navbar = () => {
         <div className={styles.auth}>
           {state.isLoggedIn ? (
             <>
-              <span className={styles.userName}>
-                Hi, {state.employee?.empName || state.user?.userId}
-              </span>
+              <div className={styles.userChip}>
+                <div className={styles.userAvatar}>
+                  {(state.employee?.empName || state.user?.userId || '?').charAt(0)}
+                </div>
+                <span className={styles.userName}>
+                  {state.employee?.empName || state.user?.userId}
+                </span>
+              </div>
               <button className="btn btn-outline btn-sm" onClick={handleLogout}>
                 <LogOut size={14} /> Logout
               </button>
@@ -90,7 +102,7 @@ const Navbar = () => {
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
         >
-          {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
     </nav>

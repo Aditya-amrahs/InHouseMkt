@@ -1,100 +1,156 @@
+/* ================================================================
+   Dashboard — Industry-Grade Module CSS
+   ================================================================ */
+
+/* ---- Header row ---- */
 .header {
-  margin-bottom: 40px;
+  margin-bottom: 36px;
 }
 
 .title {
-  font-size: 2rem;
-  margin-bottom: 8px;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
 }
 
 .actions {
   display: flex;
-  gap: 12px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
+/* ---- Stats Row ---- */
 .statsRow {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-bottom: 40px;
+  gap: 16px;
+  margin-bottom: 36px;
 }
 
 .statCard {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 32px;
+  padding: 20px 24px;
   cursor: pointer;
-  transition: var(--transition);
+  transition: border-color var(--t-base), box-shadow var(--t-base), background var(--t-base);
+  background: var(--bg-surface);
   border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Left accent bar — inactive */
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: var(--border);
+  transition: background var(--t-base);
 }
 
 .statCard:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--primary);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
 }
 
+/* Indigo accent on hover for requirements */
+.statCard:nth-child(1):hover::before,
+.statCard:nth-child(1).active::before { background: var(--indigo-500); }
+
+/* Violet accent for offers */
+.statCard:nth-child(2):hover::before,
+.statCard:nth-child(2).active::before { background: var(--violet-500); }
+
+/* Emerald accent for proposals */
+.statCard:nth-child(3):hover::before,
+.statCard:nth-child(3).active::before { background: var(--emerald-500); }
+
 .statCard.active {
-  background: rgba(108, 99, 255, 0.15);
-  border-color: var(--primary);
-  box-shadow: 0 4px 20px rgba(108, 99, 255, 0.2);
+  border-color: var(--border-strong);
+  background: var(--bg-overlay);
+  box-shadow: var(--shadow-xs);
 }
 
 .statIcon {
-  margin-bottom: 16px;
-  opacity: 0.8;
+  margin-bottom: 12px;
+  color: var(--text-tertiary);
 }
 
 .statCount {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 800;
   line-height: 1;
-  margin-bottom: 8px;
-  background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  font-feature-settings: 'tnum';
 }
 
 .statLabel {
-  font-size: 1rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.07em;
 }
 
+/* ---- Tab Content ---- */
 .tabContent {
   min-height: 300px;
+  animation: fadeUp 0.3s var(--t-base) both;
 }
 
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Card Actions ---- */
 .cardActions {
   display: flex;
   gap: 8px;
-  margin-top: 20px;
+  margin-top: 18px;
   flex-wrap: wrap;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
 }
 
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
 @media (max-width: 768px) {
   .statsRow {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 10px;
   }
-  
+
   .header {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .actions {
-    margin-top: 16px;
+    margin-top: 14px;
     width: 100%;
   }
-  
-  .actions a {
+
+  .actions a,
+  .actions button {
     flex: 1;
     justify-content: center;
   }
+}
+
+@media (max-width: 480px) {
+  .statCard { padding: 16px; }
+  .statCount { font-size: 1.6rem; }
 }
