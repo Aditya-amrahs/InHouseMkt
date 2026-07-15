@@ -3,6 +3,7 @@ import axios from 'axios';
 const api = axios.create({
   baseURL: '/api',
   headers: { 'Content-Type': 'application/json' },
+  withCredentials: true,
 });
 
 // ---- Users ----
@@ -11,6 +12,7 @@ export const login      = (user)           => api.post('/users/login', user);
 export const logout     = (user)           => api.post('/users/logout', user);
 export const updateUser = (userId, user)   => api.put(`/users/${userId}`, user);
 export const deleteUser = (userId)         => api.delete(`/users/${userId}`);
+export const deleteCurrentUser = ()         => api.delete('/users/me');
 
 // ---- Employees ----
 export const addEmployee                = (emp)    => api.post('/employees', emp);

@@ -30,6 +30,7 @@ C:\Users\dell\Desktop\NAvikenz\Code+projects\JAVA\CAPSTONE\marketplace-backend\s
 C:\Users\dell\Desktop\NAvikenz\Code+projects\JAVA\CAPSTONE\marketplace-backend\src\main\java\com\inhouse\marketplace\repository\IRequirementRepository.java
 C:\Users\dell\Desktop\NAvikenz\Code+projects\JAVA\CAPSTONE\marketplace-backend\src\main\java\com\inhouse\marketplace\MarketplaceApplication.java
 C:\Users\dell\Desktop\NAvikenz\Code+projects\JAVA\CAPSTONE\marketplace-backend\src\main\java\com\inhouse\marketplace\entity\Resource.java
+C:\Users\dell\Desktop\NAvikenz\Code+projects\JAVA\CAPSTONE\marketplace-backend\src\main\java\com\inhouse\marketplace\exception\ForbiddenOperationException.java
 C:\Users\dell\Desktop\NAvikenz\Code+projects\JAVA\CAPSTONE\marketplace-backend\src\main\java\com\inhouse\marketplace\entity\User.java
 C:\Users\dell\Desktop\NAvikenz\Code+projects\JAVA\CAPSTONE\marketplace-backend\src\main\java\com\inhouse\marketplace\service\impl\OfferServiceImpl.java
 C:\Users\dell\Desktop\NAvikenz\Code+projects\JAVA\CAPSTONE\marketplace-backend\src\main\java\com\inhouse\marketplace\exception\DuplicateResourceException.java

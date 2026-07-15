@@ -1,11 +1,11 @@
-import { createContext, useContext, useReducer, useCallback } from 'react';
+import { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
 import { login as apiLogin, logout as apiLogout, register as apiRegister } from '../services/api';
 
 const SESSION_KEY = 'mp_auth';
 
 const loadSession = () => {
   try {
-    const raw = sessionStorage.getItem(SESSION_KEY);
+    const raw = localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY);
     if (raw) return JSON.parse(raw);
   } catch { /* ignore */ }
   return { user: null, employee: null, isLoggedIn: false };
@@ -31,6 +31,18 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
+  useEffect(() => {
+    const syncSession = (event) => {
+      if (event.key !== SESSION_KEY) return;
+      const nextState = event.newValue ? JSON.parse(event.newValue) : null;
+      dispatch(nextState?.isLoggedIn
+        ? { type: 'LOGIN', user: nextState.user, employee: nextState.employee }
+        : { type: 'LOGOUT' });
+    };
+    window.addEventListener('storage', syncSession);
+    return () => window.removeEventListener('storage', syncSession);
+  }, []);
+
   const login = useCallback(async (userId, password) => {
     const res = await apiLogin({ userId, password });
     return res.data;
@@ -44,21 +56,22 @@ export const AuthProvider = ({ children }) => {
   const setSession = useCallback((user, employee) => {
     const newState = { user, employee, isLoggedIn: true };
     dispatch({ type: 'LOGIN', user, employee });
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(newState));
+    localStorage.setItem(SESSION_KEY, JSON.stringify(newState));
   }, []);
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
     if (state.user) {
-      apiLogout(state.user).catch(() => {});
+      await apiLogout().catch(() => {});
     }
     dispatch({ type: 'LOGOUT' });
+    localStorage.removeItem(SESSION_KEY);
     sessionStorage.removeItem(SESSION_KEY);
   }, [state.user]);
 
   const updateEmployee = useCallback((employee) => {
     dispatch({ type: 'UPDATE_EMPLOYEE', employee });
     const current = loadSession();
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...current, employee }));
+    localStorage.setItem(SESSION_KEY, JSON.stringify({ ...current, employee }));
   }, []);
 
   return (

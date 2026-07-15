@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -22,6 +23,14 @@ import java.util.List;
 public class EmployeeController {
 
     private final IEmployeeService employeeService;
+
+    private int actingEmployeeId(HttpSession session) {
+        Object userId = session.getAttribute("AUTH_USER_ID");
+        if (userId == null) {
+            throw new com.inhouse.marketplace.exception.ForbiddenOperationException("An authenticated session is required.");
+        }
+        return employeeService.getEmployeeByUserId(userId.toString()).getEmpId();
+    }
 
     /** POST /api/employees — Add a new employee */
     @PostMapping
@@ -82,7 +91,7 @@ public class EmployeeController {
     /** PATCH /api/employees/proposals/accepted — Accept a proposal */
     @PatchMapping("/proposals/accepted")
     @Operation(summary = "Accept a proposal")
-    public ResponseEntity<Proposal> acceptProposal(@RequestBody Proposal prop) {
-        return ResponseEntity.ok(employeeService.updateIsAccepted(prop));
+    public ResponseEntity<Proposal> acceptProposal(@RequestBody Proposal prop, HttpSession session) {
+        return ResponseEntity.ok(employeeService.acceptProposal(prop.getPropId(), actingEmployeeId(session)));
     }
 }

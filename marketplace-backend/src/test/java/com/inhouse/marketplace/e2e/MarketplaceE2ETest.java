@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.mock.web.MockHttpSession;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -147,6 +148,7 @@ class MarketplaceE2ETest {
             """.formatted(propId);
 
         mockMvc.perform(patch("/api/employees/proposals/accepted")
+                        .session(sessionFor("bob@company.com"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(acceptJson))
                 .andExpect(status().isOk())
@@ -234,6 +236,7 @@ class MarketplaceE2ETest {
             """.formatted(propId);
 
         mockMvc.perform(patch("/api/employees/proposals/accepted")
+                        .session(sessionFor("eve@company.com"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(acceptJson))
                 .andExpect(status().isOk())
@@ -258,18 +261,18 @@ class MarketplaceE2ETest {
     @Test
     @DisplayName("testE2E_UIToAPIIntegration")
     void testE2E_UIToAPIIntegration() throws Exception {
-        // Preflight request exactly as the Angular dev server (localhost:4200) sends it
+        // Preflight request sent by the React dev server.
         mockMvc.perform(options("/api/offers")
-                        .header("Origin", "http://localhost:4200")
+                        .header("Origin", "http://localhost:5173")
                         .header("Access-Control-Request-Method", "GET"))
                 .andExpect(status().isOk())
-                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:4200"));
+                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"));
 
         // Actual cross-origin GET reflects the allowed origin and returns JSON
         mockMvc.perform(get("/api/offers")
-                        .header("Origin", "http://localhost:4200"))
+                        .header("Origin", "http://localhost:5173"))
                 .andExpect(status().isOk())
-                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:4200"))
+                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"))
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
         // A disallowed origin is rejected
@@ -322,5 +325,11 @@ class MarketplaceE2ETest {
         // Requirement should be gone
         mockMvc.perform(get("/api/requirements/" + reqId))
                 .andExpect(status().isNotFound());
+    }
+
+    private MockHttpSession sessionFor(String userId) {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("AUTH_USER_ID", userId);
+        return session;
     }
 }

@@ -3,7 +3,7 @@
 ## 1\. System Architecture (3-Tier)
 
 ┌─────────────────────┐
-│   Angular UI         │  Sprint 3 — Presentation Layer
+│   React UI           │  Sprint 3 — Presentation Layer
 │ (Components/Services)│
 └──────────┬───────────┘
 │ REST/HTTP (JSON)
@@ -22,8 +22,8 @@
 │      Database          │
 └───────────────────────┘
 
-* **Presentation Layer (Angular):** UI components for Login, Requirement, Offer,
-and Proposal screens; consumes REST APIs via Angular services.
+* **Presentation Layer (React):** UI components for Login, Requirement, Offer,
+and Proposal screens; consumes REST APIs through the shared Axios service.
 * **Application Layer (Spring Boot):** REST Controllers expose endpoints backed by
 Service interfaces (`IProposalService`, `IUserService`, `IOfferService`,
 `IResourceService`, `IEmployeeService`, `IRequirementService`) containing business logic.

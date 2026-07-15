@@ -76,7 +76,7 @@
 | `testE2E_RequirementToProposalToAcceptance` | Employee posts requirement → another proposes → original accepts |
 | `testE2E_OfferToProposalToAcceptance` | Employee posts offer → another proposes → original accepts |
 | `testE2E_DeleteCascadesCorrectly` | Deleting a Requirement/Offer correctly handles linked Proposals |
-| `testE2E_UIToAPIIntegration` | Angular UI actions correctly invoke and reflect REST API responses |
+| `testE2E_UIToAPIIntegration` | React UI actions correctly invoke and reflect REST API responses |
 
 ## 4. Coverage Goal
 

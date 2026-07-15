@@ -2,6 +2,7 @@ package com.inhouse.marketplace.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 /**
@@ -23,5 +24,6 @@ public class User {
 
     @Column(name = "password", nullable = false)
     @NotBlank(message = "Password must not be blank")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 }

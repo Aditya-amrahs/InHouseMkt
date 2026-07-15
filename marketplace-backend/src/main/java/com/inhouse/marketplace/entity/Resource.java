@@ -1,6 +1,7 @@
 package com.inhouse.marketplace.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -20,6 +21,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @SuperBuilder
 public abstract class Resource {
+
+    /** Explicit discriminator for clients consuming the combined resource feed. */
+    @JsonProperty("resourceType")
+    public String getResourceType() {
+        return this instanceof Requirement ? "REQUIREMENT" : "OFFER";
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

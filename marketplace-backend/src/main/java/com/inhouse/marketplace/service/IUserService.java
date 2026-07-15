@@ -21,4 +21,7 @@ public interface IUserService {
 
     /** Remove a user by userId. */
     void removeUser(String userId);
+
+    /** Remove the authenticated user and all marketplace data owned by its employee profile. */
+    void removeCurrentUser(String userId);
 }

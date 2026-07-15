@@ -11,13 +11,13 @@ mvn spring-boot:run   # starts API on http://localhost:8080 (Swagger: /swagger-u
 
 Coverage report after `mvn test`: `target/site/jacoco/index.html`
 
-## Frontend (Angular 16)
+## Frontend (React 19 + Vite)
 
 ```bash
-cd marketplace-frontend
+cd marketplace-react
 npm install
-ng serve          # http://localhost:4200 (backend must be running on :8080)
-ng build          # production build check
+npm run dev       # http://localhost:5173 (backend must be running on :8080)
+npm run build     # production build check
 ```
 
 ## Test suite contents (per TestingPlan.md)
@@ -45,5 +45,5 @@ ng build          # production build check
 
 ## Known notes
 - `mvn verify` enforces 80% bundle line coverage (JaCoCo). Controllers are covered mainly by E2E tests; if the gate fails, review `target/site/jacoco` and add `@WebMvcTest` slices, or lower the threshold in `pom.xml`.
-- `src/app/app.component.html` is a dead Angular starter file (the component uses an inline template). Safe to delete.
+- The React client is the supported presentation layer.
 - Passwords are stored/serialized in plain text (`User` entity) — acceptable for a capstone, flag for production.

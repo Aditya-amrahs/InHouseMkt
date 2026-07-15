@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmployeeServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Employee In-House Marketplace</a> &gt; <a href="index.source.html" class="el_package">com.inhouse.marketplace.service.impl</a> &gt; <span class="el_source">EmployeeServiceImpl.java</span></div><h1>EmployeeServiceImpl.java</h1><pre class="source lang-java linenums">package com.inhouse.marketplace.service.impl;
+
+import com.inhouse.marketplace.entity.*;
+import com.inhouse.marketplace.exception.ResourceNotFoundException;
+import com.inhouse.marketplace.exception.ForbiddenOperationException;
+import com.inhouse.marketplace.repository.*;
+import com.inhouse.marketplace.service.IEmployeeService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+
+/**
+ * Implementation of IEmployeeService.
+ */
+@Service
+<span class="fc" id="L19">@RequiredArgsConstructor</span>
+@Transactional
+public class EmployeeServiceImpl implements IEmployeeService {
+
+    private final IEmployeeRepository employeeRepository;
+    private final IOfferRepository offerRepository;
+    private final IRequirementRepository requirementRepository;
+    private final IProposalRepository proposalRepository;
+    private final IUserRepository userRepository;
+
+    @Override
+    public Employee addEmployee(Employee emp) {
+        // If the linked User is already registered, re-attach the managed instance
+        // so the CascadeType.ALL persist doesn't try to insert a duplicate row.
+<span class="pc bpc" id="L33" title="2 of 4 branches missed.">        if (emp.getUser() != null &amp;&amp; emp.getUser().getUserId() != null) {</span>
+<span class="fc" id="L34">            userRepository.findById(emp.getUser().getUserId()).ifPresent(emp::setUser);</span>
+        }
+<span class="fc" id="L36">        return employeeRepository.save(emp);</span>
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Employee getEmployeeByUserId(String userId) {
+<span class="fc" id="L42">        return employeeRepository.findByUserId(userId)</span>
+<span class="fc" id="L43">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Employee&quot;, userId));</span>
+    }
+
+    @Override
+    public Employee editEmployee(Employee emp) {
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">        if (!employeeRepository.existsById(emp.getEmpId())) {</span>
+<span class="nc" id="L49">            throw new ResourceNotFoundException(&quot;Employee&quot;, emp.getEmpId());</span>
+        }
+<span class="fc" id="L51">        return employeeRepository.save(emp);</span>
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Employee getEmployee(int empId) {
+<span class="fc" id="L57">        return employeeRepository.findById(empId)</span>
+<span class="fc" id="L58">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Employee&quot;, empId));</span>
+    }
+
+    @Override
+    public Offer updateIsAvailable(Offer offer) {
+<span class="fc" id="L63">        Offer existing = offerRepository.findById(offer.getResId())</span>
+<span class="pc" id="L64">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Offer&quot;, offer.getResId()));</span>
+<span class="fc" id="L65">        existing.setAvailable(offer.isAvailable());</span>
+<span class="fc" id="L66">        existing.setAvailableUpto(offer.getAvailableUpto());</span>
+<span class="fc" id="L67">        return offerRepository.save(existing);</span>
+    }
+
+    @Override
+    public Requirement updateIsFulfilled(Requirement req) {
+<span class="fc" id="L72">        Requirement existing = requirementRepository.findById(req.getResId())</span>
+<span class="pc" id="L73">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Requirement&quot;, req.getResId()));</span>
+<span class="fc" id="L74">        existing.setFulfilled(true);</span>
+<span class="fc" id="L75">        existing.setFulfilledOn(LocalDate.now());</span>
+<span class="fc" id="L76">        return requirementRepository.save(existing);</span>
+    }
+
+    @Override
+    public Proposal updateIsAccepted(Proposal prop) {
+<span class="fc" id="L81">        Proposal existing = proposalRepository.findById(prop.getPropId())</span>
+<span class="pc" id="L82">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Proposal&quot;, prop.getPropId()));</span>
+<span class="fc" id="L83">        existing.setAccepted(true);</span>
+<span class="fc" id="L84">        existing.setAcceptedOn(LocalDate.now());</span>
+<span class="fc" id="L85">        return proposalRepository.save(existing);</span>
+    }
+
+    @Override
+    public Proposal acceptProposal(int propId, int actingEmployeeId) {
+<span class="fc" id="L90">        Proposal existing = proposalRepository.findById(propId)</span>
+<span class="pc" id="L91">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Proposal&quot;, propId));</span>
+<span class="pc bpc" id="L92" title="2 of 4 branches missed.">        if (existing.getResource() == null || existing.getResource().getEmp() == null</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">                || existing.getResource().getEmp().getEmpId() != actingEmployeeId) {</span>
+<span class="nc" id="L94">            throw new ForbiddenOperationException(&quot;Only the resource owner can accept this proposal.&quot;);</span>
+        }
+<span class="fc" id="L96">        existing.setAccepted(true);</span>
+<span class="fc" id="L97">        existing.setAcceptedOn(LocalDate.now());</span>
+<span class="fc" id="L98">        return proposalRepository.save(existing);</span>
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;Offer&gt; getAllOffers(int empId) {
+<span class="fc" id="L104">        return offerRepository.findAllByEmpId(empId);</span>
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;Requirement&gt; getAllRequirements(int empId) {
+<span class="fc" id="L110">        return requirementRepository.findAllByEmpId(empId);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

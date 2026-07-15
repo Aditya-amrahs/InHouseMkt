@@ -2,6 +2,7 @@ package com.inhouse.marketplace.service.impl;
 
 import com.inhouse.marketplace.entity.*;
 import com.inhouse.marketplace.exception.ResourceNotFoundException;
+import com.inhouse.marketplace.exception.ForbiddenOperationException;
 import com.inhouse.marketplace.repository.*;
 import com.inhouse.marketplace.service.IEmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -79,6 +80,19 @@ public class EmployeeServiceImpl implements IEmployeeService {
     public Proposal updateIsAccepted(Proposal prop) {
         Proposal existing = proposalRepository.findById(prop.getPropId())
                 .orElseThrow(() -> new ResourceNotFoundException("Proposal", prop.getPropId()));
+        existing.setAccepted(true);
+        existing.setAcceptedOn(LocalDate.now());
+        return proposalRepository.save(existing);
+    }
+
+    @Override
+    public Proposal acceptProposal(int propId, int actingEmployeeId) {
+        Proposal existing = proposalRepository.findById(propId)
+                .orElseThrow(() -> new ResourceNotFoundException("Proposal", propId));
+        if (existing.getResource() == null || existing.getResource().getEmp() == null
+                || existing.getResource().getEmp().getEmpId() != actingEmployeeId) {
+            throw new ForbiddenOperationException("Only the resource owner can accept this proposal.");
+        }
         existing.setAccepted(true);
         existing.setAcceptedOn(LocalDate.now());
         return proposalRepository.save(existing);

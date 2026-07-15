@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Offer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Employee In-House Marketplace</a> &gt; <a href="index.source.html" class="el_package">com.inhouse.marketplace.entity</a> &gt; <span class="el_source">Offer.java</span></div><h1>Offer.java</h1><pre class="source lang-java linenums">package com.inhouse.marketplace.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Represents something an employee is OFFERING on the marketplace.
+ * Extends the abstract Resource base class.
+ */
+@Entity
+@DiscriminatorValue(&quot;OFFER&quot;)
+<span class="pc" id="L18">@Data</span>
+<span class="fc" id="L19">@NoArgsConstructor</span>
+<span class="nc" id="L20">@AllArgsConstructor</span>
+<span class="pc bpc" id="L21" title="1 of 2 branches missed.">@SuperBuilder</span>
+<span class="nc bnc" id="L22" title="All 20 branches missed.">@EqualsAndHashCode(callSuper = true)</span>
+public class Offer extends Resource {
+
+    /**
+     * Whether the offer is currently available.
+     */
+    @Column(name = &quot;is_available&quot;)
+<span class="fc" id="L29">    private boolean isAvailable;</span>
+
+    /**
+     * Date until which the offer is available.
+     */
+    @Column(name = &quot;available_upto&quot;)
+<span class="fc" id="L35">    private LocalDate availableUpto;</span>
+
+    /**
+     * Proposals submitted against this offer.
+     */
+    @OneToMany(mappedBy = &quot;resource&quot;, cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
+    @JsonIgnoreProperties({&quot;resource&quot;})
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+<span class="fc" id="L45">    private List&lt;Proposal&gt; proposals = new ArrayList&lt;&gt;();</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

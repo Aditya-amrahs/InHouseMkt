@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmployeeController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Employee In-House Marketplace</a> &gt; <a href="index.source.html" class="el_package">com.inhouse.marketplace.controller</a> &gt; <span class="el_source">EmployeeController.java</span></div><h1>EmployeeController.java</h1><pre class="source lang-java linenums">package com.inhouse.marketplace.controller;
+
+import com.inhouse.marketplace.entity.*;
+import com.inhouse.marketplace.service.IEmployeeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession;
+
+import java.util.List;
+
+/**
+ * REST controller for Employee operations.
+ * Base path: /api/employees
+ */
+@RestController
+@RequestMapping(&quot;/api/employees&quot;)
+<span class="fc" id="L21">@RequiredArgsConstructor</span>
+@Tag(name = &quot;Employee&quot;, description = &quot;Employee management and status updates&quot;)
+public class EmployeeController {
+
+    private final IEmployeeService employeeService;
+
+    private int actingEmployeeId(HttpSession session) {
+<span class="fc" id="L28">        Object userId = session.getAttribute(&quot;AUTH_USER_ID&quot;);</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        if (userId == null) {</span>
+<span class="fc" id="L30">            throw new com.inhouse.marketplace.exception.ForbiddenOperationException(&quot;An authenticated session is required.&quot;);</span>
+        }
+<span class="fc" id="L32">        return employeeService.getEmployeeByUserId(userId.toString()).getEmpId();</span>
+    }
+
+    /** POST /api/employees — Add a new employee */
+    @PostMapping
+    @Operation(summary = &quot;Add new employee&quot;)
+    public ResponseEntity&lt;Employee&gt; add(@RequestBody Employee emp) {
+<span class="fc" id="L39">        return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.addEmployee(emp));</span>
+    }
+
+    /** PUT /api/employees — Update employee details */
+    @PutMapping
+    @Operation(summary = &quot;Update employee&quot;)
+    public ResponseEntity&lt;Employee&gt; update(@RequestBody Employee emp) {
+<span class="nc" id="L46">        return ResponseEntity.ok(employeeService.editEmployee(emp));</span>
+    }
+
+    /** GET /api/employees/{empId} — Get employee by ID */
+    @GetMapping(&quot;/{empId}&quot;)
+    @Operation(summary = &quot;Get employee by ID&quot;)
+    public ResponseEntity&lt;Employee&gt; get(@PathVariable int empId) {
+<span class="nc" id="L53">        return ResponseEntity.ok(employeeService.getEmployee(empId));</span>
+    }
+
+    /** GET /api/employees/by-user?userId= — Get employee by linked login userId */
+    @GetMapping(&quot;/by-user&quot;)
+    @Operation(summary = &quot;Get employee by linked user ID&quot;)
+    public ResponseEntity&lt;Employee&gt; getByUserId(@RequestParam String userId) {
+<span class="nc" id="L60">        return ResponseEntity.ok(employeeService.getEmployeeByUserId(userId));</span>
+    }
+
+    /** GET /api/employees/{empId}/offers — All offers by employee */
+    @GetMapping(&quot;/{empId}/offers&quot;)
+    @Operation(summary = &quot;Get all offers by employee&quot;)
+    public ResponseEntity&lt;List&lt;Offer&gt;&gt; getOffers(@PathVariable int empId) {
+<span class="nc" id="L67">        return ResponseEntity.ok(employeeService.getAllOffers(empId));</span>
+    }
+
+    /** GET /api/employees/{empId}/requirements — All requirements by employee */
+    @GetMapping(&quot;/{empId}/requirements&quot;)
+    @Operation(summary = &quot;Get all requirements by employee&quot;)
+    public ResponseEntity&lt;List&lt;Requirement&gt;&gt; getRequirements(@PathVariable int empId) {
+<span class="nc" id="L74">        return ResponseEntity.ok(employeeService.getAllRequirements(empId));</span>
+    }
+
+    /** PATCH /api/employees/offers/availability — Mark offer available/unavailable */
+    @PatchMapping(&quot;/offers/availability&quot;)
+    @Operation(summary = &quot;Update offer availability&quot;)
+    public ResponseEntity&lt;Offer&gt; updateOfferAvailability(@RequestBody Offer offer) {
+<span class="fc" id="L81">        return ResponseEntity.ok(employeeService.updateIsAvailable(offer));</span>
+    }
+
+    /** PATCH /api/employees/requirements/fulfilled — Mark requirement as fulfilled */
+    @PatchMapping(&quot;/requirements/fulfilled&quot;)
+    @Operation(summary = &quot;Mark requirement as fulfilled&quot;)
+    public ResponseEntity&lt;Requirement&gt; updateRequirementFulfilled(@RequestBody Requirement req) {
+<span class="nc" id="L88">        return ResponseEntity.ok(employeeService.updateIsFulfilled(req));</span>
+    }
+
+    /** PATCH /api/employees/proposals/accepted — Accept a proposal */
+    @PatchMapping(&quot;/proposals/accepted&quot;)
+    @Operation(summary = &quot;Accept a proposal&quot;)
+    public ResponseEntity&lt;Proposal&gt; acceptProposal(@RequestBody Proposal prop, HttpSession session) {
+<span class="fc" id="L95">        return ResponseEntity.ok(employeeService.acceptProposal(prop.getPropId(), actingEmployeeId(session)));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

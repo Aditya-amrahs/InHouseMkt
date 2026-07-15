@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Resource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Employee In-House Marketplace</a> &gt; <a href="index.source.html" class="el_package">com.inhouse.marketplace.entity</a> &gt; <span class="el_source">Resource.java</span></div><h1>Resource.java</h1><pre class="source lang-java linenums">package com.inhouse.marketplace.entity;
+
+import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDate;
+
+/**
+ * Abstract base class for marketplace items.
+ * Uses SINGLE_TABLE inheritance so both Requirement and Offer are stored in one table
+ * with a discriminator column &quot;resource_type&quot;.
+ */
+@Entity
+@Table(name = &quot;resources&quot;)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = &quot;resource_type&quot;, discriminatorType = DiscriminatorType.STRING)
+<span class="pc bnc" id="L19" title="All 58 branches missed.">@Data</span>
+<span class="fc" id="L20">@NoArgsConstructor</span>
+<span class="nc" id="L21">@AllArgsConstructor</span>
+<span class="pc" id="L22">@SuperBuilder</span>
+public abstract class Resource {
+
+    /** Explicit discriminator for clients consuming the combined resource feed. */
+    @JsonProperty(&quot;resourceType&quot;)
+    public String getResourceType() {
+<span class="fc bfc" id="L28" title="All 2 branches covered.">        return this instanceof Requirement ? &quot;REQUIREMENT&quot; : &quot;OFFER&quot;;</span>
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;res_id&quot;)
+<span class="fc" id="L34">    private int resId;</span>
+
+    @Column(name = &quot;title&quot;, nullable = false, length = 200)
+<span class="fc" id="L37">    private String title;</span>
+
+    @Column(name = &quot;description&quot;, length = 1000)
+<span class="fc" id="L40">    private String description;</span>
+
+    /**
+     * Category — e.g., &quot;Accommodation&quot;, &quot;Electronics&quot;, &quot;Vehicle&quot;, &quot;Services&quot;
+     */
+    @Column(name = &quot;category&quot;, length = 100)
+<span class="fc" id="L46">    private String category;</span>
+
+    /**
+     * Type — e.g., &quot;SELL&quot;, &quot;RENT&quot;, &quot;FREE&quot;, &quot;HELP&quot;
+     */
+    @Column(name = &quot;type&quot;, length = 50)
+<span class="fc" id="L52">    private String type;</span>
+
+    @Column(name = &quot;price&quot;)
+<span class="fc" id="L55">    private double price;</span>
+
+    @Column(name = &quot;posted_date&quot;)
+<span class="fc" id="L58">    private LocalDate date;</span>
+
+    /**
+     * The employee who owns this resource (requirement or offer).
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = &quot;emp_id&quot;, nullable = false)
+<span class="fc" id="L65">    private Employee emp;</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.inhouse.marketplace.repository.EmployeeRepositoryTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.410 s -- in com.inhouse.marketplace.repository.EmployeeRepositoryTest

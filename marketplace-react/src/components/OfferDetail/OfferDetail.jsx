@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getOffer, addProposal } from '../../services/api';
+import { getOffer, addProposal, acceptProposal } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { ArrowLeft, CheckCircle, XCircle, Send, Handshake, Lock, Inbox, AlertCircle } from 'lucide-react';
 import Spinner from '../shared/Spinner';
@@ -55,6 +55,15 @@ const OfferDetail = () => {
       setMsg({ type: 'error', text: 'Failed to submit proposal.' });
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleAccept = async (propId) => {
+    try {
+      await acceptProposal({ propId });
+      fetchOffer();
+    } catch (err) {
+      setMsg({ type: 'error', text: err.response?.data?.message || 'Failed to accept proposal.' });
     }
   };
 
@@ -142,6 +151,7 @@ const OfferDetail = () => {
                           <span className="font-mono text-warning">₹{p.amount.toLocaleString()}</span>
                         </div>
                         <p className="text-sm text-secondary">{p.proposal}</p>
+                        {!p.accepted && <button className="btn btn-success btn-sm mt-3" onClick={() => handleAccept(p.propId)}>Accept Proposal</button>}
                       </div>
                     ))}
                   </div>

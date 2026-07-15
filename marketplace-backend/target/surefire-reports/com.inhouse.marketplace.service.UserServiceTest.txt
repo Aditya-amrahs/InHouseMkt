@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.inhouse.marketplace.service.UserServiceTest
+-------------------------------------------------------------------------------
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.179 s -- in com.inhouse.marketplace.service.UserServiceTest

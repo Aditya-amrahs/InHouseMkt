@@ -16,6 +16,7 @@ const TYPES = ['SELL', 'RENT', 'FREE', 'HELP'];
 
 const Marketplace = ({ defaultView = 'all' }) => {
   const { state } = useAuth();
+  const isBrowse = defaultView === 'all';
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -47,6 +48,17 @@ const Marketplace = ({ defaultView = 'all' }) => {
     fetchResources();
   }, [fetchResources]);
 
+  // Keep an already-open marketplace current for other employees' posts.
+  useEffect(() => {
+    const refresh = () => fetchResources();
+    const interval = window.setInterval(refresh, 15000);
+    window.addEventListener('focus', refresh);
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener('focus', refresh);
+    };
+  }, [fetchResources]);
+
   const clearFilters = () => {
     setSearchTerm('');
     setFilterCategory('');
@@ -74,12 +86,12 @@ const Marketplace = ({ defaultView = 'all' }) => {
 
         {/* Hero */}
         <div className="page-hero animate-fade-in">
-          <h1>Employee Marketplace</h1>
+          <h1>{isBrowse ? 'Employee Marketplace' : defaultView === 'requirements' ? 'Requirements' : 'Offers'}</h1>
           <p>Find what you need or offer what you have — within your company</p>
         </div>
 
         {/* Filters Panel */}
-        <div className={`${styles.filtersPanel} animate-slide-up`}>
+        {isBrowse && <div className={`${styles.filtersPanel} animate-slide-up`}>
           <div className={styles.filtersRow}>
             <div className={styles.searchWrapper}>
               <Search className={styles.searchIcon} size={16} strokeWidth={2} />
@@ -120,7 +132,7 @@ const Marketplace = ({ defaultView = 'all' }) => {
               Offers <span className={styles.count}>{displayOffers.length}</span>
             </button>
           </div>
-        </div>
+        </div>}
 
         {loading ? (
           <Spinner />

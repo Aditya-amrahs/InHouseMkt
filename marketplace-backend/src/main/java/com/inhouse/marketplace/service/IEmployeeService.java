@@ -29,6 +29,9 @@ public interface IEmployeeService {
     /** Mark a proposal as accepted. */
     Proposal updateIsAccepted(Proposal prop);
 
+    /** Accept a proposal only when the acting employee owns its resource. */
+    Proposal acceptProposal(int propId, int actingEmployeeId);
+
     /** Get all offers posted by a specific employee. */
     List<Offer> getAllOffers(int empId);
 
