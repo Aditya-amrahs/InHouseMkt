@@ -1,0 +1,13 @@
+com\inhouse\marketplace\repository\ProposalRepositoryTest.class
+com\inhouse\marketplace\service\UserServiceTest.class
+com\inhouse\marketplace\service\RequirementServiceTest.class
+com\inhouse\marketplace\repository\EmployeeRepositoryTest.class
+com\inhouse\marketplace\service\ProposalServiceTest.class
+com\inhouse\marketplace\repository\OfferRepositoryTest.class
+com\inhouse\marketplace\repository\RequirementRepositoryTest.class
+com\inhouse\marketplace\repository\ResourceRepositoryTest.class
+com\inhouse\marketplace\e2e\MarketplaceE2ETest.class
+com\inhouse\marketplace\service\ResourceServiceTest.class
+com\inhouse\marketplace\service\EmployeeServiceTest.class
+com\inhouse\marketplace\repository\UserRepositoryTest.class
+com\inhouse\marketplace\service\OfferServiceTest.class
