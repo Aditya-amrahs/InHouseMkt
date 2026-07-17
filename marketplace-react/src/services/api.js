@@ -1,7 +1,15 @@
 import axios from 'axios';
 
+const defaultProductionApiBaseURL =
+  'https://inhousemkt-b3dwaah6bkgpezc5.centralindia-01.azurewebsites.net/api';
+
+const resolvedApiBaseURL = import.meta.env.VITE_API_BASE_URL
+  || (import.meta.env.PROD ? defaultProductionApiBaseURL : '/api');
+
+const apiBaseURL = resolvedApiBaseURL.replace(/\/$/, '');
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: apiBaseURL,
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true,
 });
